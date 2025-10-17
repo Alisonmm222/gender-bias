@@ -1,0 +1,32 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "simulations_tools"
+version = "0.0.1"
+description = "beste simualtion ever"
+authors = [
+  { name = "Taner, Alison" },
+]
+
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    
+]
+requires-python = "~=3.10.0"
+
+
+[tool.ruff]
+line-length = 99
+src = ["simulations_tools"]
+include = ["pyproject.toml", "simulations_tools/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
+
+[tool.ruff.lint.isort]
+known-first-party = ["simulations_tools"]
+force-sort-within-sections = true
+

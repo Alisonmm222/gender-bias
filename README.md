@@ -4,9 +4,10 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-beste simualtion ever
-
 ## Project Organization
+
+Model: llama-3.2-3b-instruct-q4_k_m.gguf
+
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen

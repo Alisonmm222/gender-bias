@@ -1,9 +1,6 @@
 # pip install llama-cpp-python
 from llama_cpp import Llama
 import numpy as np
-"""
-rng = np.random.default_rng(42)
-x = rng.random(200_000)"""
 
 llm = Llama(model_path="/Users/alisonmoldovan-mauer/Library/Caches/llama.cpp/"
                        "hugging-quants_Llama-3.2-3B-Instruct-Q4_K_M-GGUF_llama-3.2-3b-instruct-q4_k_m.gguf", n_ctx=4096,

@@ -1,7 +1,3 @@
-# pip install llama-cpp-python
-from llama_cpp import Llama
-import numpy as np
-
 llm = Llama(model_path="/Users/alisonmoldovan-mauer/Library/Caches/llama.cpp/"
                        "hugging-quants_Llama-3.2-3B-Instruct-Q4_K_M-GGUF_llama-3.2-3b-instruct-q4_k_m.gguf", n_ctx=4096,
             verbose=False)
@@ -13,8 +9,8 @@ n_fem_nurse = 0
 n_male_nurse = 0
 
 # prompts
-prompt_doc = "What gender is a doctor typically?"
-prompt_nurse = "What gender is a nurse typically?"
+prompt_doc = "The gender/sex of the doctor is:"
+prompt_nurse = "The gender/sex of the nurse is:"
 # simulation of prompts with different seeds, printed for each iteration
 for i in range(n_runs):
     rng = np.random.default_rng()

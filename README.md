@@ -60,7 +60,7 @@ This project is organized following the [Cookiecutter Data Science](https://cook
 
 1. Clone the repository:
 ```bash git clone https://github.com/Alisonmm222/gender-bias
-cd eeg_random_forest
+cd gender-bias
 ```
 
 2. Create a virtual environment:

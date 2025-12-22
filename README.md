@@ -10,11 +10,11 @@
 
 **Authors:** Taner Yasadur, Alison Moldovan-Mauer
 
-**Date:** 2025-01-08
+**Date:** 2025-01-09
 
 **Model:** llama-3.2-3b-instruct-q4_k_m.gguf
 ```bash
-pip install install llama-cpp-python
+pip install llama-cpp-python
 ```   
 
 ## Project Structure

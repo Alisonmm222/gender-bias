@@ -6,7 +6,7 @@ from tqdm import tqdm
 load_dotenv()
 PATH = os.environ.get("MODELPATH")
 
-n_runs = 500 # mins for 10k runs
+n_runs = 2000 # 29 mins for 10k runs
 outputs = []
 # initialize vars
 n_fem_nurse = 0
@@ -19,7 +19,7 @@ llm = Llama(
     verbose=False,
     seed=42, # makes results reproducible
     threads=7, # controlles how many CPU cores to use
-    n_batch = 32 # how many tokens to process in parallel
+    n_batch = 16 # how many tokens to process in parallel
 )
 
 for i in tqdm(range(n_runs)):

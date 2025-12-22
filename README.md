@@ -73,9 +73,18 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 pip install -e .
 ```
-4. (Optional) Copy and configure environment variables:
+4. Copy and configure environment variables:
 ```bash
-cp .env.example .env
+import dotenv
+load_dotenv()
+```
+in your .env file:
+```bash
+MODELPATH=/path/to/your/model.gguf
+```
+
+
+
 ```
 
 

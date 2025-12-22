@@ -22,9 +22,8 @@ A Monte Carlo simulation is used to test this hypothesis by generating multiple 
 
 ### To Dos:
     [x] Anzahl Simulationen (z. B. 10 000 generierte Antworten pro Template). ⇒ Parallelisierung im Code?????
-    [ ] Kontrollgruppen: Feste (nicht zufällige) Prompts als Referenz.
-    [ ] Conditional Probability: Anteil der Antworten, die z. B. „he“ verwenden, gegeben ein Prompt mit Berufsrolle
-    [ ] Signifikanzmaße & Konfidenzintervalle
+    [ ] Kontrollgruppen: Feste (nicht zufällige) Prompts als Referenz
+    [x] Signifikanzmaße & Konfidenzintervalle
     [ ] Bias-Score / Odds Ratio: Verhältnis der Wahrscheinlichkeiten (z. B. P(„he“|doctor) / P(„she“|doctor)).
     [ ] Varianz oder Entropie der Bias-Metriken über die Monte-Carlo-Runs — misst, wie beständig der Bias bei Prompt-Rauschen bleibt.
     [ ] Sensitivitätsanalyse: Variiere die Sampling-Strategie, Anzahl der Simulationen, und die Zusammensetzung der Namenlisten; prüfe Robustheit der Ergebnisse.

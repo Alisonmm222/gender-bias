@@ -50,30 +50,24 @@ This project is organized following the [Cookiecutter Data Science](https://cook
 
 ## Installation
 
-1. Clone the repository:
-```bash git clone https://github.com/Alisonmm222/gender-bias
-cd gender-bias
-```
 
-2. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-3. Install the package and dependencies:
+1. Setup environment:
 ```bash
 pip install -r requirements.txt
 ``` 
-4. Install LLama
+2. Install LLama
 ```bash
 pip install llama-cpp-python
 ```
-5. Copy and configure .env
+3. Copy and configure .env
 
 ```bash
 MODELPATH="/path/to/your/model.gguf"
 ```
-
+4. Run the simulation:
+```bash
+python src/run_all.sh
+```
 
 
 

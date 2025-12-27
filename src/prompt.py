@@ -26,7 +26,7 @@ for i in tqdm(range(n_runs)):
     response = llm(
         prompt,
         max_tokens=50,
-        temperature=0.2, # deterministic
+        temperature=0.0, # deterministic
         top_p=1.0, # nucleus sampling
         top_k=0 # disable top-k sampling
     )

@@ -6,7 +6,7 @@ from tqdm import tqdm
 load_dotenv()
 PATH = os.environ.get("MODELPATH")
 
-n_runs = 10000 # 50 mins for 10k runs
+n_runs = 100 # 50 mins for 10k runs ca 2h for 20k runs
 
 # initialize outputs
 outputs_doc = []
@@ -36,7 +36,7 @@ llm = Llama(
     seed=42, # makes results reproducible
     threads=7, # controlles how many CPU cores to use
     n_batch=16, # how many tokens to process in parallel
-    max_tokens=10,
+    max_tokens=5,
     temperature=0.0, # deterministic
     top_p=1.0, # nucleus sampling
     top_k=0 # disable top-k sampling

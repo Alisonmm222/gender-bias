@@ -21,18 +21,15 @@ A Monte Carlo simulation is used to test this hypothesis by generating multiple 
 
 
 ### To Dos:
-    [x] Anzahl Simulationen (z. B. 10 000 generierte Antworten pro Template). ⇒ Parallelisierung im Code?????
-    [ ] Kontrollgruppen: Feste (nicht zufällige) Prompts als Referenz
+    [x] Anzahl Simulationen (z. B. 10 000 generierte Antworten pro Template). ⇒ Parallelisierung im Code????? 
     [x] Signifikanzmaße & Konfidenzintervalle
     [ ] Bias-Score / Odds Ratio: Verhältnis der Wahrscheinlichkeiten (z. B. P(„he“|doctor) / P(„she“|doctor)).
     [ ] Varianz oder Entropie der Bias-Metriken über die Monte-Carlo-Runs — misst, wie beständig der Bias bei Prompt-Rauschen bleibt.
     [ ] Sensitivitätsanalyse: Variiere die Sampling-Strategie, Anzahl der Simulationen, und die Zusammensetzung der Namenlisten; prüfe Robustheit der Ergebnisse.
     [x] Temperature: 0.0 deterministisch
     [ ] Visualisierungen:
-        [ ] Balkendiagramm: P(Arzt | male) vs P(Arzt | female) mit Errorbars.
-        [ ] Heatmap: Berufe × Gender→Wahrscheinlichkeiten.
+        [x] Balkendiagramm: P(Arzt | male) vs P(Arzt | female) mit Errorbars.
         [ ] Token-prob Divergence Kurven (KL oder mean logprob diff).
-        [ ] Wordclouds getrennt nach Gender (Adjektive).
 
 
 This project is organized following the [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/) template. The structure is as follows:

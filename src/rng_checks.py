@@ -2,9 +2,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
-seed = 42
-rng = np.random.default_rng(seed)
+def run(seed):
+    torch.manural_seed(seed)
+    out = llm.generate(
+        **inputs,
+        do_sample = True,
+        temperature = 0,
+        top_p = 1,
+        max_tokens = 20
+    )
+    return tokenize.decode(out[0], skip_special_tokens = True)
 
+# RNG sanity check
+# should be identical
+print(run(42))
+print(run(42))
+# should be different
+print(run(43))
+
+
+"""
 def check_uniform(N=100_000, out_prefix="figures/uniform", rng=rng):
     u = rng.random(N) # U(0,1)
     mean_u = u.mean()
@@ -65,4 +82,4 @@ def check_normal(N=100_000, out_prefix="figures/normal", rng=rng):
     stats.probplot(z, dist="norm", plot=plt)
     plt.title(f"QQ-Plot vs. N(0,1), N={N}")
     plt.savefig(f"{out_prefix}_qq.png", dpi=150)
-    plt.close()
+    plt.close()"""

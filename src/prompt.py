@@ -1,8 +1,11 @@
 import os
+import sys
 from dotenv import load_dotenv
 from llama_cpp import Llama
 from tqdm import tqdm
 import pandas as pd
+
+sys.path.append("./src")
 from gender_utils import parse_gender
 
 load_dotenv()
@@ -26,7 +29,7 @@ llm = Llama(
     n_batch=256, # how many tokens to process in parallel
 )
 
-n_runs = 10 # 50 mins for 10k runs ca 2h for 20k runs
+n_runs = 10000 # 50 mins for 10k runs ca 2h for 20k runs
 run_id = 0 # unique identifier for each run
 rows = [] # store results
 
@@ -57,9 +60,8 @@ for profession, prompt_text in prompts:
         run_id += 1
 
 df = pd.DataFrame(rows)
-df.to_csv("gender_bias_results.csv", index=False)
 
-df.head(10)
-df["gender"].value_counts()
-df.groupby("profession")["gender"].value_counts()
+df.to_csv("figures/gender_bias_results.csv", index=False)
+
+
 

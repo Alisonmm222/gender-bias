@@ -28,4 +28,3 @@ plt.title('Proportion of Females in Each Profession with 95% CI')
 plt.grid(axis='y')
 plt.savefig('figures/proportion_females_by_profession.png', dpi=150)
 plt.show()
-

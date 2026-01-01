@@ -56,7 +56,7 @@ pip install -r requirements.txt
 ```bash
 pip install llama-cpp-python
 ```
-3. Copy and configure .env
+3. Configure .env
 
 ```bash
 MODELPATH="/path/to/your/model.gguf"

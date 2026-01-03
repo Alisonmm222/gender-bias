@@ -26,7 +26,9 @@ print("p-value:", p)
 
 # Fisher Exact Test
 
-table_2x2 = [[table.loc["nurse", "femake"], table.loc["nurse", "male"]],
+table_2x2 = [[table.loc["nurse", "female"], table.loc["nurse", "male"]],
              [table.loc["doctor", "female"], table.loc["doctor", "male"]]]
 oddsratio, p_value = fisher_exact(table_2x2)
 print("Fishers exact test p-value:", p_value, "Odds Ratio by Fisher:", oddsratio)
+
+

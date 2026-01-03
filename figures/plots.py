@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import time
 df = pd.read_csv("figures/gender_bias_results.csv")
 
 colors = {
@@ -10,34 +11,34 @@ colors = {
     'unknown': '#4A4A4A'
 }
 
-df.head(10)
-df["gender"].value_counts()
+
+df["gender"].value_counts().show()
 df.groupby("profession")["gender"].value_counts()
 
-# Nurse Statistics
-n_fem_nurse = df[(df["profession"] == "nurse") & (df["gender"] == "female")].shape[0]
-n_male_nurse = df[(df["profession"] == "nurse") & (df["gender"] == "male")].shape[0]
-n_nonbinary_nurse = df[(df["profession"] == "nurse") & (df["gender"] == "non-binary")].shape[0]
 
-plt.figure(figsize=(8, 6))
-sns.barplot(x=["Female", "Male", "Non-Binary"],
-            y=[n_fem_nurse, n_male_nurse, n_nonbinary_nurse],
-            palette=['#A45FE0', '#0B3D91', '#F5C900'])
-plt.xlabel('Gender')
-plt.ylabel('Frequency')
-plt.title('Gender Distribution among Nurses')
-plt.tight_layout()
-plt.savefig('figures/gender_distribution_nurse.png', dpi=150)
-plt.show()
 
-# Stacked bar plot
-count = df.groupby(['profession', 'gender']).size().unstack(fill_value=0)
-probs = count.div(count.sum(axis=1), axis=0)
+# dynamic plot
+plt.ion()
 
-probs.plot(kind='bar', stacked=True, figsize=(10, 7), color=[colors[col] for col in probs.columns])
-plt.ylabel('Proportion')
-plt.title('Gender Distribution by Profession')
-plt.legend(title='Gender')
-plt.tight_layout()
-plt.savefig('figures/gender_distribution_by_profession.png', dpi=150)
+fig, ax = plt.subplots()
+labels = ['Female', 'Male', 'Non-Binary', 'Unknown']
+counts = [0, 0, 0]
+
+bars = ax.bar(labels, counts, color=['#A45FE0', '#0B3D91', '#F5C900'])
+ax.set_ylim(0, 1000)
+ax.set_ylabel("Count")
+
+for i in range(1000):
+    # simulate updates
+    counts[i % 3] += 1
+
+    # update bars
+    for bar, c in zip(bars, counts):
+        bar.set_height(c)
+
+    ax.set_title(f"Simulation step {i+1}")
+    plt.pause(0.01)
+
+plt.ioff()
+plt.title(f"Simulation step {i+1}")
 plt.show()

@@ -7,16 +7,39 @@ df = pd.read_csv("figures/gender_bias_results.csv")
 df["is_female"] = df["gender"].apply(lambda x: 1 if x == "female" else 0) # Create a binary column for female
 
 # Group by profession and calculate statistics
-grouped = df.groupby("profession")["is_female"]
-summary = grouped.agg(["sum", "count", "mean", "std"])
-print(summary)
+summary = (
+        df
+        .groupby("profession")["is_female"]
+        .agg(["sum", "mean", "std"])
+        .reset_index()
+)
 
 # Calculate 95% confidence intervals
-summary['ci_lower'] = summary['mean'] - 1.96 * (summary['std'] / np.sqrt(summary['count']))
-summary['ci_upper'] = summary['mean'] + 1.96 * (summary['std'] / np.sqrt(summary['count']))
-print(summary)
+summary['ci_95'] = 1.96 * summary['std'] / np.sqrt(summary['count'])
+summary['ci_lower'] = summary['mean'] - summary['ci_95']
+summary['ci_upper'] = summary['mean'] + summary['ci_95']
 
-summary = summary.reset_index()
+# Create Latex Table
+summary['Female (%)'] = (summary['mean'] * 100).round(1)
+summary['CI'] = (
+        '['
+        + (summary['ci_lower'] * 100).round(1).astype(str)
+        + ', '
+        + (summary['ci_upper'] * 100).round(1).astype(str)
+        + ']'
+)
+
+
+print(summary)
+latex_std_ci = summary[['profession', 'Female (%)', 'CI']]
+
+latex_code = latex_std_ci.to_latex(
+        index=False,
+        caption="Female pronoun proportions with 95\\% confidence intervals",
+        label="tab:gender_bias",
+        column_format="lcc"
+)
+print(latex_code)
 
 # Plotting
 plt.figure(figsize=(10, 6))

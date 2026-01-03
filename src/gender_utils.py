@@ -10,8 +10,6 @@ def parse_gender(text):
         pronouns_found.append("her")
     if "his" in text:
         pronouns_found.append("his")
-    if "their" in text:
-        pronouns_found.append("their")
 
     # ignore if multiple pronouns found
     if len(pronouns_found) != 1:
@@ -23,5 +21,3 @@ def parse_gender(text):
         return "female", "her"
     if pronoun == "his":
         return "male", "his"
-    if pronoun == "their":
-        return "non binary", "their"

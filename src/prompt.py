@@ -61,7 +61,7 @@ for profession, prompt_text in prompts:
 
 df = pd.DataFrame(rows)
 
-df.to_csv("figures/gender_bias_results.csv", index=False)
+df.to_csv("figures/gender_bias_results_small.csv", index=False)
 
 
 

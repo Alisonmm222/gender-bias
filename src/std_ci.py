@@ -1,31 +1,53 @@
 import numpy as np
-from src.prompt import outputs_doc, outputs_nurse, n_male_nurse, n_fem_doc, n_male_doc, n_nonbinary_nurse, n_nonbinary_doc
+import pandas as pd
+import matplotlib.pyplot as plt
 
-## Nurse Statistics
-# Calculate mean, standard deviation and 95% confidence interval for the proportion of female nurses
-N_nurse = (n_fem_nurse + n_male_nurse + n_nonbinary_nurse) # total number of samples with usefull info
-mean_nurse = round((n_fem_nurse / N_nurse), 4)
-std_nurse =  round(((mean_nurse * (1 - mean_nurse)) ** 0.5), 4)
+df = pd.read_csv("figures/gender_bias_results.csv")
 
-z = 1.96
-ci_lower_nurse = round((mean_nurse - z * std_nurse / np.sqrt(N_nurse)), 4)
-ci_upper_nurse = round((mean_nurse + z * std_nurse / np.sqrt(N_nurse)), 4)
+df["is_female"] = df["gender"].apply(lambda x: 1 if x == "female" else 0) # Create a binary column for female
 
-print("Mean Female Nurses:", mean_nurse) # mean
-print("Std:", std_nurse) # Standard deviation of the proportion 0.0446
-print("95% CI:", (ci_lower_nurse, ci_upper_nurse)) # 95% Confidence Interval: (0.985, 1.011) -> 50% is not in the Range
+# Group by profession and calculate statistics
+summary = (
+        df
+        .groupby("profession")["is_female"]
+        .agg(["sum", "mean", "std"])
+        .reset_index()
+)
+
+# Calculate 95% confidence intervals
+summary['ci_95'] = 1.96 * summary['std'] / np.sqrt(summary['count'])
+summary['ci_lower'] = summary['mean'] - summary['ci_95']
+summary['ci_upper'] = summary['mean'] + summary['ci_95']
+
+# Create Latex Table
+summary['Female (%)'] = (summary['mean'] * 100).round(1)
+summary['CI'] = (
+        '['
+        + (summary['ci_lower'] * 100).round(1).astype(str)
+        + ', '
+        + (summary['ci_upper'] * 100).round(1).astype(str)
+        + ']'
+)
 
 
-## Doctor Statistics
-# Calculate mean, standard deviation and 95% confidence interval for the proportion of female doctors
-N_doc = (n_fem_doc + n_male_doc + n_nonbinary_doc) # total number of samples with usefull info
-mean_doc = round((n_fem_doc / N_doc), 4)
-std_doc =  round(((mean_doc * (1 - mean_doc)) ** 0.5), 4)
+print(summary)
+latex_std_ci = summary[['profession', 'Female (%)', 'CI']]
 
-z = 1.96
-ci_lower_doc = round((mean_doc - z * std_doc / np.sqrt(N_doc)), 4)
-ci_upper_doc = round((mean_doc + z * std_doc / np.sqrt(N_doc)), 4)
+latex_code = latex_std_ci.to_latex(
+        index=False,
+        caption="Female pronoun proportions with 95\\% confidence intervals",
+        label="tab:gender_bias",
+        column_format="lcc"
+)
+print(latex_code)
 
-print("Mean Female Doctors:", mean_doc) # mean 0.998
-print("Std:", std_doc) # Standard deviation of the proportion 0.0446
-print("95% CI:", (ci_lower_doc, ci_upper_doc)) # 95% Confidence Interval: (0.985, 1.011) -> 50% is not in the Range
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.bar(summary["profession"], summary["mean"], yerr=[summary["mean"] - summary["ci_lower"], summary["ci_upper"] - summary["mean"]], capsize=10,
+        color=['lightcoral' if prof == 'nurse' else 'lightgreen' for prof in summary["profession"]])
+plt.ylim(0, 1)
+plt.ylabel('Proportion of Females')
+plt.title('Proportion of Females in Each Profession with 95% CI')
+plt.grid(axis='y')
+plt.savefig('figures/proportion_females_by_profession.png', dpi=150)
+plt.show()

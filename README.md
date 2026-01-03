@@ -15,7 +15,7 @@
 **Model:** llama-3.2-3b-instruct-q4_k_m.gguf 
 
 ## Project Structure
-**Hypothesis:** The perceived gender bias in a language model persists even when the inputs vary randomly.
+**Hypothesis:** The perceived gender bias in Llama 3b persists even when the inputs vary randomly.
 
 A Monte Carlo simulation is used to test this hypothesis by generating multiple variations of input prompts and analyzing the model's responses.
 
@@ -23,7 +23,7 @@ A Monte Carlo simulation is used to test this hypothesis by generating multiple 
 ### To Dos:
     [x] Anzahl Simulationen (z. B. 10 000 generierte Antworten pro Template). ⇒ Parallelisierung im Code????? 
     [x] Signifikanzmaße & Konfidenzintervalle
-    [ ] Bias-Score / Odds Ratio: Verhältnis der Wahrscheinlichkeiten (z. B. P(„he“|doctor) / P(„she“|doctor)).
+    [x] Bias-Score / Odds Ratio: Verhältnis der Wahrscheinlichkeiten (z. B. P(„he“|doctor) / P(„she“|doctor)).
     [ ] Varianz oder Entropie der Bias-Metriken über die Monte-Carlo-Runs — misst, wie beständig der Bias bei Prompt-Rauschen bleibt.
     [ ] Sensitivitätsanalyse: Variiere die Sampling-Strategie, Anzahl der Simulationen, und die Zusammensetzung der Namenlisten; prüfe Robustheit der Ergebnisse.
     [x] Temperature: 0.0 deterministisch
@@ -35,9 +35,9 @@ A Monte Carlo simulation is used to test this hypothesis by generating multiple 
 This project is organized following the [Cookiecutter Data Science](https://cookiecutter-data-science.drivendata.org/) template. The structure is as follows:
 
 ```
-├── figures
-├── models
-├── notebooks
+├── figures (results and plots will be stored here) 
+├── models (safe model here and add path to your .env)
+├── notebooks 
 ├── reports
 ├── src
 ├── env.  
@@ -56,7 +56,7 @@ pip install -r requirements.txt
 ```bash
 pip install llama-cpp-python
 ```
-3. Copy and configure .env
+3. Configure .env
 
 ```bash
 MODELPATH="/path/to/your/model.gguf"

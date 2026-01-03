@@ -1,0 +1,111 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\title{Gender Bias in LLama}
+\author{\textbf{Taner Yasadur, Alison Moldovan-Mauer}}
+\date{January 2026}
+
+\begin{document}
+
+\maketitle
+\section*{Abstract}
+
+Large Language Models (LLMs) are trained on almost all available text in the internet. They have generated harmful biases against various demographic groups. For our analysis, we tested Llama 3.2 3b. A Monte Carlo simulation is used to test this hypothesis by generating multiple variations of input prompts and analyzing the model's responses. Our results show that the Model reproduces a gender bias in both jobs. The model’s output distribution converges to the same gender probabilities for nurse and doctor. Our results indicate that the model preferentially samples feminine determiners for stereotypically female professions and masculine determiners for stereotypically male professions.
+
+
+
+\maketitle
+\section{Introduction}
+why it its important, sexism
+In this paper, we investigate the hypothesis that the perceived gender bias in a language model persists even when the inputs vary randomly.
+
+\section{Methodology}
+In other papers LLMs have shown to generate other ouputs when advised to be in a training setup, so we 
+
+
+\subsection{Experimental Setup}
+
+how gender bias is measured  
+We test two professions (nurse, doctor) and the LLM fulfills a senctence with a possessive determiner (his/her/their). We do not give the model these options because it would fill in the first word more often than usual. 
+
+H0 = For a large number of Monte Carlo samples, the empirical distribution of Gender representation is independent of profession.
+
+H1 = The empirical distributions differ significantly across professions. Some professions are associated with a skewed gender distribution.
+
+
+Each prompt is treated as a stochastic experiment.
+Given a fixed prompt and decoding configuration, LLaMA-3B defines a probability distribution over possible possessive determiners (e.g., his, her, their).
+
+A Monte Carlo simulation is performed by:
+	•	Repeatedly sampling model outputs (N independent runs per prompt)
+	•	Estimating empirical probabilities of gendered determiners
+
+
+\subsection{Monte Carlo Simulation}
+Single LLM interactions can be stochastic due to temperature settings and inherent probabilistic generation. To achieve statistical significance, we employed a Monte Carlo approach.
+\begin{itemize}
+    \item\textbf{Iterations:} We ran N = 10.000 independent prompts for each job (doctor and nurse). 
+    \item \textbf{Metric:} The primary metrics are the counts of each gender per profession as well as the bias ratio
+    
+\end{itemize}
+
+\subsection{Measuring Gender Bias}
+
+For profession \( p \in \{\text{nurse}, \text{doctor}\} \),
+\begin{align}
+P_\theta(\text{his} \mid p) &= P_\theta(\text{her} \mid p), \\
+P_\theta(\text{gender} \mid \text{profession}) &= P_\theta(\text{gender}).
+\end{align}
+
+
+Gender Parity Ratio (GPR)
+
+\[
+\text{GPR}(p) = \frac{P(\text{his} \mid p)}{P(\text{her} \mid p)}
+\]
+
+\begin{itemize}
+    \item \textbf{GPR} $\approx 1$: equal representation
+    \item \textbf{GPR} $> 1$: masculine skew
+    \item \textbf{GPR} $< 1$: feminine skew
+\end{itemize}
+
+    
+\section{Results}
+
+\begin{table}[ht]
+\centering
+\caption{Female pronoun proportions with 95\% confidence intervals}
+\label{tab:gender_bias}
+\begin{tabular}{lcc}
+\toprule
+Profession & Female (\%) & 95\% CI \\
+\midrule
+Doctor & 0.0  & [0.0, 0.0] \\
+Nurse  & 34.8 & [33.9, 35.8] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{proportion_females_by_profession.png}
+    \caption{Your figure caption}
+    \label{fig:example}
+\end{figure}
+
+
+\section{Discussion}
+
+
+
+
+\section{Outlook and Future Work}
+Testing differences with other job roles. Not english. Testing different prompts because the outputs varies highly when the prompt is changed 
+
+\section{Conclusion}
+
+\end{document}
+

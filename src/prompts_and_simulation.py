@@ -41,10 +41,10 @@ n_runs = 10000 # 50 mins for 10k runs ca 2h for 20k runs
 run_id = 0 # unique identifier for each run
 rows = [] # store results
 props_rows = [] # store probs for visualization
+
 for profession, prompt_text in prompts:
     female_count = 0
     male_count = 0
-    nb_count = 0
     total = 0
 
 # run the experiments
@@ -80,6 +80,7 @@ for profession, prompt_text in prompts:
         })
         run_id += 1
 
+# store outputs
 df = pd.DataFrame(rows)
 df_props = pd.DataFrame(props_rows)
 

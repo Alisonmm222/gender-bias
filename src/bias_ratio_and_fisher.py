@@ -13,22 +13,45 @@ odds_doctor = table.loc["doctor", "female"] / table.loc["doctor", "male"]
 odds_nurse = table.loc["nurse", "female"] / table.loc["nurse", "male"]
 
 # Odds Ratio
+odds_ratio= odds_nurse / odds_doctor
+
 # OR = 1 means no association
 # OR > 1 nurses more likely to get female pronouns that doctors
 # OR < 1 doctors more likely to get female pronouns
-odds_ratio = odds_nurse / odds_doctor
-print("Odds Ratio (Nurse vs Doctor):", odds_ratio)
+
+# Create a LaTeX table
+latex_table = table.to_latex(
+    caption="Gender Distribution by Profession",
+    label="tab:gender_profession",
+    index=True
+)
 
 # Chi-square test for independence
 chi2, p, dof, ex = chi2_contingency(table)
-print("Chi-square Statistic:", chi2)
-print("p-value:", p)
 
 # Fisher Exact Test
-
 table_2x2 = [[table.loc["nurse", "female"], table.loc["nurse", "male"]],
              [table.loc["doctor", "female"], table.loc["doctor", "male"]]]
-oddsratio, p_value = fisher_exact(table_2x2)
-print("Fishers exact test p-value:", p_value, "Odds Ratio by Fisher:", oddsratio)
 
+p_fisher = fisher_exact(table_2x2)
 
+# Create DataFrame for LaTeX table
+latex_df = pd.DataFrame({
+    "Profession": ["Nurse", "Doctor"],
+    "Female": [table.loc["nurse", "female"], table.loc["doctor", "female"]],
+    "Male": [table.loc["nurse", "male"], table.loc["doctor", "male"]],
+    "Odds of Female": [odds_nurse, odds_doctor],
+    "Chi-Square": [chi2, chi2],
+    "Fisher p-value": [p_fisher, p_fisher],
+    "Odds Ratio": [odds_ratio, odds_ratio]
+})
+
+# Generate LaTeX code
+latex_code = latex_df.to_latex(
+    index=False,
+    caption="Gender distribution and statistical tests",
+    label="tab:gender_stats",
+    float_format="%.2f"
+)
+
+print(latex_code)

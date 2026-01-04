@@ -10,7 +10,7 @@ df["is_female"] = df["gender"].apply(lambda x: 1 if x == "female" else 0) # Crea
 summary = (
         df
         .groupby("profession")["is_female"]
-        .agg(["sum", "mean", "std"])
+        .agg(["sum", "mean", "std", "count"])
         .reset_index()
 )
 
@@ -19,7 +19,7 @@ summary['ci_95'] = 1.96 * summary['std'] / np.sqrt(summary['count'])
 summary['ci_lower'] = summary['mean'] - summary['ci_95']
 summary['ci_upper'] = summary['mean'] + summary['ci_95']
 
-# Create Latex Table
+# Create Table
 summary['Female (%)'] = (summary['mean'] * 100).round(1)
 summary['CI'] = (
         '['
@@ -28,18 +28,15 @@ summary['CI'] = (
         + (summary['ci_upper'] * 100).round(1).astype(str)
         + ']'
 )
-
-
-print(summary)
 latex_std_ci = summary[['profession', 'Female (%)', 'CI']]
 
-latex_code = latex_std_ci.to_latex(
+latex_code_std_ci = latex_std_ci.to_latex(
         index=False,
         caption="Female pronoun proportions with 95\\% confidence intervals",
         label="tab:gender_bias",
         column_format="lcc"
 )
-print(latex_code)
+print(latex_code_std_ci)
 
 # Plotting
 plt.figure(figsize=(10, 6))

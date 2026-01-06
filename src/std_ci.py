@@ -4,47 +4,66 @@ import matplotlib.pyplot as plt
 
 df = pd.read_csv("figures/gender_bias_results.csv")
 
-df["is_female"] = df["gender"].apply(lambda x: 1 if x == "female" else 0) # Create a binary column for female
+# Binary Column for male and female
+df["is_female"] = (df["gender"] == "female").astype(int)
+df["is_male"]   = (df["gender"] == "male").astype(int)
 
-# Group by profession and calculate statistics
 summary = (
-        df
-        .groupby("profession")["is_female"]
-        .agg(["sum", "mean", "std", "count"])
-        .reset_index()
+    df
+    .groupby("profession")
+    .agg(
+        female_n=("is_female", "sum"),
+        male_n=("is_male", "sum"),
+        female_prop=("is_female", "mean"),
+        male_prop = ("is_male", "mean"),
+
+    )
+    .reset_index()
 )
 
-# Calculate 95% confidence intervals
-summary['ci_95'] = 1.96 * summary['std'] / np.sqrt(summary['count'])
-summary['ci_lower'] = summary['mean'] - summary['ci_95']
-summary['ci_upper'] = summary['mean'] + summary['ci_95']
-
-# Create Table
-summary['Female (%)'] = (summary['mean'] * 100).round(1)
-summary['CI'] = (
-        '['
-        + (summary['ci_lower'] * 100).round(1).astype(str)
-        + ', '
-        + (summary['ci_upper'] * 100).round(1).astype(str)
-        + ']'
+# 95% CI for female proportion
+z = 1.96
+summary["se_f"] = np.sqrt(
+    summary["female_prop"] * (1 - summary["female_prop"]) / 10000
 )
-latex_std_ci = summary[['profession', 'Female (%)', 'CI']]
 
-latex_code_std_ci = latex_std_ci.to_latex(
-        index=False,
-        caption="Female pronoun proportions with 95\\% confidence intervals",
-        label="tab:gender_bias",
-        column_format="lcc"
+summary["ci_lower_female"] = summary["female_prop"] - z * summary["se_f"]
+summary["ci_upper_female"] = summary["female_prop"] + z * summary["se_f"]
+
+# 95% CI for male proportion
+summary["se_m"] = np.sqrt(
+    summary["male_prop"] * (1 - summary["male_prop"]) / 10000
 )
-print(latex_code_std_ci)
 
-# Plotting
-plt.figure(figsize=(10, 6))
-plt.bar(summary["profession"], summary["mean"], yerr=[summary["mean"] - summary["ci_lower"], summary["ci_upper"] - summary["mean"]], capsize=10,
-        color=['lightcoral' if prof == 'nurse' else 'lightgreen' for prof in summary["profession"]])
-plt.ylim(0, 1)
-plt.ylabel('Proportion of Females')
-plt.title('Proportion of Females in Each Profession with 95% CI')
-plt.grid(axis='y')
-plt.savefig('figures/proportion_females_by_profession.png', dpi=150)
+summary["ci_lower_male"] = summary["male_prop"] - z * summary["se_m"]
+summary["ci_upper_male"] = summary["male_prop"] + z * summary["se_m"]
+
+# Plot
+x = np.arange(len(summary["profession"]))
+width = 0.35
+fig, ax = plt.subplots(figsize=(10,6))
+
+# Female bars
+ax.bar(x + width/2, summary["female_prop"], width,
+       yerr=[summary["female_prop"] - summary["ci_lower_female"],
+             summary["ci_upper_female"] - summary["female_prop"]],
+       capsize=5, label="Female", color='#bd86ee')
+
+# Male bars
+ax.bar(x - width/2, summary["male_prop"], width,
+       yerr=[summary["male_prop"] - summary["ci_lower_male"],
+             summary["ci_upper_male"] - summary["male_prop"]],
+       capsize=5, label="Male", color='#2a5db2')
+
+# Horizontal benchmark line at 0.5
+ax.axhline(0.5, color='gray', linestyle='--', linewidth=1)
+ax.text(len(summary["profession"])-0.5, 0.51, '50% benchmark', color='gray', ha='right')
+
+ax.set_xticks(x)
+ax.set_xticklabels(summary["profession"])
+ax.set_ylim(0,0.7)
+ax.set_ylabel("Proportion", fontsize = 14)
+ax.set_title("Proportion of Gender by Profession with 95% CI Sample", fontsize = 18)
+ax.legend()
+plt.savefig('figures/proportion_by_profession_sample_true.png', dpi=150)
 plt.show()

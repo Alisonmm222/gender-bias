@@ -13,7 +13,7 @@ PATH = os.environ.get("MODELPATH") # Path to model
 
 llm = Llama(
     model_path=PATH,
-    do_sample = False, # disable sampling for deterministic output
+    do_sample = True, # sampling
     temperature=0.0, # deterministic
     top_p=1.0, # nucleus sampling
     top_k=0, # disable top-k sampling
@@ -46,7 +46,7 @@ props_rows = [] # store probs for visualization
 for profession, prompt_text in prompts:
     female_count = 0
     male_count = 0
-    total = 0
+    unknown_count = 0
 
 # run the experiments
 for profession, prompt_text in prompts:
@@ -65,21 +65,22 @@ for profession, prompt_text in prompts:
             "pronoun_used": pronoun
         })
       # Count for proportions
-        if gender is not None:
-            total += 1
+        if gender is None:
+            unknown_count += 1
             if gender == "female":
                 female_count += 1
             elif gender == "male":
                 male_count += 1
 
-        props_rows.append({
+       props_rows.append({
             "run_id": run_id,
             "prompt": prompt_text,
             "profession": profession,
-            "prop_female": female_count / total if total else 0,
-            "prop_male": male_count / total if total else 0,
+            "prop_female": female_count / 10000,
+            "prop_male": male_count / 10000,
+            "prop_unknown": unknown_count / 10000
         })
-        run_id += 1
+       run_id += 1
 
 # store outputs
 df = pd.DataFrame(rows)

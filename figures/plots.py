@@ -1,100 +1,119 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import sys
+import os
 
-df_probs = pd.read_csv("figures/gender_props_results.csv")
+sys.path.append(os.path.abspath("./src"))
+from metadata import get_metadata
+
+summary = pd.read_csv("figures/summary.csv")
 df = pd.read_csv("figures/gender_bias_results.csv")
 
-# Plot Gender Proportion by Profession
-colors = {
-    'female': '#A45FE0',
-    'male': '#0B3D91',
-    'unknown': '#4A4A4A'
-}
-# Plot stacked bar chart
-plt.bar(df_probs['profession'], df_probs['prop_male'], color=colors['male'], label='Male')
-plt.bar(df_probs['profession'], df_probs['prop_female'], bottom=df_probs['prop_male'], color=colors['female'], label='Female')
-plt.bar(df_probs['profession'], df_probs['prop_unknown'], bottom=df_probs['prop_male'] + df_probs['prop_female'], color=colors['unknown'], label='Unknown')
+metadata = get_metadata()
+metadata_str = {k: str(v) for k,v in metadata.items()}
 
-plt.xlabel('Profession')
-plt.ylabel('Proportion')
-plt.title('Gender Proportions by Profession')
-plt.ylim(0, 1)  # Ensure the y-axis goes from 0 to 1
-plt.legend()
-plt.show()
-
-
-"""df_mean = (
-    df_probs
-    .groupby("profession")["gender"]
-    .count()
-)
-x = np.arange(len(df_mean))
+## Plot Proportion with CI py Profession
+x = np.arange(len(summary["profession"]))
+fig, ax = plt.subplots(figsize=(10, 6))
 width = 0.35
+
+# Female bars
+ax.bar(x + width / 2, summary["female_prop"], width,
+       yerr=[summary["female_prop"] - summary["ci_lower_female"],
+             summary["ci_upper_female"] - summary["female_prop"]],
+       capsize=5, label="Female", color='#bd86ee')
+
+# Male bars
+ax.bar(x - width / 2, summary["male_prop"], width,
+       yerr=[summary["male_prop"] - summary["ci_lower_male"],
+             summary["ci_upper_male"] - summary["male_prop"]],
+       capsize=5, label="Male", color='#2a5db2')
+
+# Horizontal benchmark line at 0.5
+ax.axhline(0.5, color='gray', linestyle='--', linewidth=1)
+ax.text(len(summary["profession"]) - 0.5, 0.51, '50% benchmark', color='gray', ha='right')
+ax.set_xticks(x)
+ax.set_xticklabels(summary["profession"], fontsize=14)
+ax.set_ylim(0, 0.7) # shorter because benchmark is at 0.5
+ax.set_ylabel("Proportion", fontsize=12)
+ax.set_title("Proportion of Gender by Profession with 95% CI", fontsize=18)
+ax.legend()
+plt.figtext(
+    0.01, 0.01,
+    f"Seed={metadata_str['seed']} | {metadata_str['date']} | commit={metadata_str['git_commit']}",
+    fontsize=7, ha='left', va='bottom', alpha=0.6)
+plt.savefig('figures/proportion_by_profession_ci.png',
+            metadata={"Seed": metadata_str['seed'], "Date": metadata_str['date'],
+                      "GitCommit": metadata_str['git_commit']}, dpi=300)
+plt.show()
+
+## Stacked Bar Plot Gender Proportion by Profession
+
 plt.figure(figsize=(10, 6))
-plt.bar(x - width/2, df_mean["prop_female"], width, label="Female")
-plt.bar(x + width/2, df_mean["prop_male"], width, label="Male")
+plt.bar(summary['profession'], summary['male_prop'], color='#2a5db2', label='Male', width=0.5)
+plt.bar(summary['profession'], summary['female_prop'], bottom=summary['male_prop'], color='#bd86ee',
+        label='Female', width=0.5)
+plt.bar(summary['profession'], summary['unknown_n'], bottom=summary['male_prop']
+        + summary['female_prop'], color='#7c7c7c', label='Unknown', width=0.5)
 
-plt.xticks(x, df_mean.index, rotation=45, ha="right")
-plt.ylim(0, 5)
-plt.axhline(0.5, linestyle="--")
-plt.title("Female Underrepresentation in Doctor Predictions Compared to Nurses", fontsize = 18)
-plt.ylabel("Proportion", fontsize = 14)
-plt.xlabel("Profession", fontsize = 14)
-plt.legend()
-plt.tight_layout()
-plt.savefig('figures/', dpi=150)
+# order legend
+handles, labels = plt.gca().get_legend_handles_labels()
+order = ["Unknown", "Female", "Male"]
+ordered_handles = [handles[labels.index(lbl)] for lbl in order]
+
+# percentages on bars
+ax = plt.gca()
+for i, profession in enumerate(summary['profession']):
+    y_male = summary.loc[i, 'male_prop']
+    y_female = summary.loc[i, 'female_prop']
+    y_unknown = summary.loc[i, 'unknown_prop']
+
+    # Male label
+    if y_male > 0:
+        ax.text(
+            i,
+            y_male / 2,
+            f"{y_male:.0%}",
+            ha='center',
+            va='center',
+            color='#151414',
+            fontsize=12
+        )
+
+    # Female label
+    if y_female > 0:
+        ax.text(
+            i,
+            y_male + y_female / 2,
+            f"{y_female:.0%}",
+            ha='center',
+            va='center',
+            color='#151414',
+            fontsize=12
+        )
+
+    # Unknown label
+    if y_unknown > 0:
+        ax.text(
+            i,
+            y_male + y_female + y_unknown / 2,
+            f"{y_unknown:.0%}",
+            ha='center',
+            va='center',
+            color='#151414',
+            fontsize=14
+        )
+plt.xticks(fontsize=14)
+plt.title('Gender Proportions by Profession', fontsize=18)
+plt.ylim(0, 1)
+ax.yaxis.set_major_formatter(lambda y, _: f"{int(y*100)}%")
+plt.legend(ordered_handles, order)
+plt.savefig('figures/proportion_by_profession_bar.png',
+                metadata={"Seed": metadata_str['seed'], "Date": metadata_str['date'],
+                          "GitCommit": metadata_str['git_commit']}, dpi=300)
+plt.figtext(
+    0.01, 0.01,
+    f"Seed={metadata_str['seed']} | {metadata_str['date']} | commit={metadata_str['git_commit']}",
+    fontsize=7, ha='left', va='bottom', alpha=0.6)
 plt.show()
-"""
-
-"""
-# Plot Gender and Profession
-plt.figure(figsize=(8, 6))
-plt.plot(df_probs['run_id'], df_probs['prop_female'], color='#A45FE0')
-plt.xlabel("Run")
-plt.ylabel("Female proportion")
-plt.title("Convergence of Female Pronoun Probability")
-plt.tight_layout()
-plt.savefig("figures/", dpi=150)
-plt.show()
-
-# Bar Plot
-colors = {
-    "female": "#A45FE0",
-    "male": "#0B3D91",
-    "unknown": "#4A4A4A"
-}
-counts = (
-    df
-    .groupby(["profession", "gender"])
-    .size()
-    .unstack(fill_value=0)
-)
-
-props = counts.div(counts.sum(axis=1), axis=0)
-
-x = np.arange(len(counts))
-width = 0.25
-
-plt.figure(figsize=(9, 6))
-
-for i, gender in enumerate(props.columns):
-    plt.bar(
-        x + (i - len(props.columns)/2) * width,
-        props[gender],
-        width,
-        label=gender.capitalize(),
-        color=colors.get(gender)
-    )
-
-plt.xlabel("Profession")
-plt.ylabel("Count")
-plt.title("Gender by Profession")
-plt.xticks(x, counts.index, rotation=45, ha="right")
-plt.axhline(0.5, linestyle="--", linewidth=1)
-plt.legend()
-plt.tight_layout()
-plt.savefig("figures/", dpi=150)
-plt.show()
-
-"""

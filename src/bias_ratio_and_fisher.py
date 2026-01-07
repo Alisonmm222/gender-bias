@@ -12,7 +12,7 @@ odds_doctor = table.loc["doctor", "female"] / table.loc["doctor", "male"]
 odds_nurse = table.loc["nurse", "female"] / table.loc["nurse", "male"]
 
 # Odds Ratio
-odds_ratio= odds_nurse / odds_doctor
+odds_ratio = odds_nurse / odds_doctor
 
 # OR = 1 means no association
 # OR > 1 nurses more likely to get female pronouns that doctors
@@ -32,7 +32,8 @@ chi2, p, dof, ex = chi2_contingency(table)
 table_2x2 = [[table.loc["nurse", "female"], table.loc["nurse", "male"]],
              [table.loc["doctor", "female"], table.loc["doctor", "male"]]]
 
-p_fisher = fisher_exact(table_2x2)
+p_fisher = fisher_exact(table_2x2) # odds ration and fisher odds ratio the same
+print(p_fisher)
 
 # Create DataFrame for LaTeX table
 latex_df = pd.DataFrame({
@@ -41,7 +42,6 @@ latex_df = pd.DataFrame({
     "Male": [table.loc["nurse", "male"], table.loc["doctor", "male"]],
     "Odds of Female": [odds_nurse, odds_doctor],
     "Chi-Square": [chi2, chi2],
-    "Fisher p-value": [p_fisher, p_fisher],
     "Odds Ratio": [odds_ratio, odds_ratio]
 })
 
@@ -52,5 +52,3 @@ latex_code = latex_df.to_latex(
     label="tab:gender_stats",
     float_format="%.2f"
 )
-
-print(latex_code)

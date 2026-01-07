@@ -1,6 +1,12 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import sys
+import os
+
+sys.path.append(os.path.abspath("./src"))
+from metadata import get_metadata
+
+metadata = get_metadata()
 
 df = pd.read_csv("figures/gender_bias_results.csv")
 
@@ -38,32 +44,41 @@ summary["se_m"] = np.sqrt(
 summary["ci_lower_male"] = summary["male_prop"] - z * summary["se_m"]
 summary["ci_upper_male"] = summary["male_prop"] + z * summary["se_m"]
 
-# Plot
-x = np.arange(len(summary["profession"]))
-width = 0.35
-fig, ax = plt.subplots(figsize=(10,6))
+# calculate unknown
+summary["unknown_prop"] = 1 - (summary["female_prop"] + summary["male_prop"])
+summary["unknown_n"] = 10000 - (summary["female_n"] + summary["male_n"])
 
-# Female bars
-ax.bar(x + width/2, summary["female_prop"], width,
-       yerr=[summary["female_prop"] - summary["ci_lower_female"],
-             summary["ci_upper_female"] - summary["female_prop"]],
-       capsize=5, label="Female", color='#bd86ee')
+# Save summary to a new file
+summary.to_csv("./figures/summary.csv", index=False)
 
-# Male bars
-ax.bar(x - width/2, summary["male_prop"], width,
-       yerr=[summary["male_prop"] - summary["ci_lower_male"],
-             summary["ci_upper_male"] - summary["male_prop"]],
-       capsize=5, label="Male", color='#2a5db2')
 
-# Horizontal benchmark line at 0.5
-ax.axhline(0.5, color='gray', linestyle='--', linewidth=1)
-ax.text(len(summary["profession"])-0.5, 0.51, '50% benchmark', color='gray', ha='right')
 
-ax.set_xticks(x)
-ax.set_xticklabels(summary["profession"])
-ax.set_ylim(0,0.7)
-ax.set_ylabel("Proportion", fontsize = 14)
-ax.set_title("Proportion of Gender by Profession with 95% CI Sample", fontsize = 18)
-ax.legend()
-plt.savefig('figures/proportion_by_profession_sample_true.png', dpi=150)
-plt.show()
+# Create Latex Table
+summary['Female (%)'] = (summary['female_prop'] * 100).round(1).astype(str)
+summary['CI Female'] = (
+        '['
+        + (summary['ci_lower_female'] * 100).round(1).astype(str)
+        + ', '
+        + (summary['ci_upper_female'] * 100).round(1).astype(str)
+        + ']'
+)
+
+summary['Male (%)'] = (summary['male_prop'] * 100).round(1).astype(str)
+summary['CI Male'] = (
+        '['
+        + (summary['ci_lower_male'] * 100).round(1).astype(str)
+        + ', '
+        + (summary['ci_upper_male'] * 100).round(1).astype(str)
+        + ']'
+)
+
+latex_std_ci = summary[['profession', 'Female (%)', 'CI Female', 'Male (%)', 'CI Male']]
+
+latex_code = latex_std_ci.to_latex(
+    index=False,
+    caption="Female pronoun proportions with 95\\% confidence intervals",
+    label="tab:gender_bias",
+    column_format="lcc"
+)
+print(latex_code)
+

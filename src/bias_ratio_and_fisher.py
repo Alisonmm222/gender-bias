@@ -1,7 +1,7 @@
 import pandas as pd
 from scipy.stats import chi2_contingency, fisher_exact
 
-df = pd.read_csv("figures/gender_bias_results.csv")
+df = pd.read_csv("figures/gender_bias_results.csv", sep = ",", comment = "#")
 
 df["is_female"] = df["gender"].apply(lambda x: 1 if x == "female" else 0) # Create a binary column for female
 table = pd.crosstab(df["profession"], df["gender"])
@@ -13,17 +13,9 @@ odds_nurse = table.loc["nurse", "female"] / table.loc["nurse", "male"]
 
 # Odds Ratio
 odds_ratio = odds_nurse / odds_doctor
-
 # OR = 1 means no association
 # OR > 1 nurses more likely to get female pronouns that doctors
 # OR < 1 doctors more likely to get female pronouns
-
-# Create a LaTeX table
-latex_table = table.to_latex(
-    caption="Gender Distribution by Profession",
-    label="tab:gender_profession",
-    index=True
-)
 
 # Chi-square test for independence
 chi2, p, dof, ex = chi2_contingency(table)
@@ -33,7 +25,6 @@ table_2x2 = [[table.loc["nurse", "female"], table.loc["nurse", "male"]],
              [table.loc["doctor", "female"], table.loc["doctor", "male"]]]
 
 p_fisher = fisher_exact(table_2x2) # odds ration and fisher odds ratio the same
-print(p_fisher)
 
 # Create DataFrame for LaTeX table
 latex_df = pd.DataFrame({
@@ -46,7 +37,7 @@ latex_df = pd.DataFrame({
 })
 
 # Generate LaTeX code
-latex_code = latex_df.to_latex(
+latex_table_odds = latex_df.to_latex(
     index=False,
     caption="Gender distribution and statistical tests",
     label="tab:gender_stats",

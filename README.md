@@ -1,4 +1,4 @@
-# Gender Bias in LLMs 
+# Gender Bias in Llama 3.2
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
@@ -15,7 +15,7 @@
 **Model:** llama-3.2-3b-instruct-q4_k_m.gguf 
 
 ## Project Structure
-**Hypothesis:** The probability of a female pronoun differs significantly between professions.
+**Hypothesis:**  Female and male pronouns have the same probability of appearing in the output across professions.
 
 A Monte Carlo simulation is used to let the model choose a possessive determiner for two different prompts and professions (nurse and doctor). 
 
@@ -33,7 +33,6 @@ This project is organized following the [Cookiecutter Data Science](https://cook
 ```
 
 ## Installation
-
 
 1. Setup environment:
 ```bash

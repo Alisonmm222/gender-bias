@@ -5,10 +5,10 @@ import sys
 import os
 
 sys.path.append(os.path.abspath("./src"))
-from metadata import get_metadata
+from create_metadata import get_metadata
 
-summary = pd.read_csv("figures/summary.csv")
-df = pd.read_csv("figures/gender_bias_results.csv")
+summary = pd.read_csv("figures/summary.csv", sep = ",",  comment = "#")
+df = pd.read_csv("figures/gender_bias_results.csv",  sep = ",", comment = "#")
 
 metadata = get_metadata()
 metadata_str = {k: str(v) for k,v in metadata.items()}

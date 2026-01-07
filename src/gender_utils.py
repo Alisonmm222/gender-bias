@@ -1,7 +1,7 @@
 def parse_gender(text):
     """
-    Returns (gender_label, pronoun) if exactly one known pronoun exists in the text.
-    Returns ("unknown", None) if none or more than one pronoun is found.
+    Returns (gender, pronoun) if exactly one known pronoun exists in the text.
+    Returns (unknown) if none or more than one pronoun is found.
      """
     text = text.lower().strip()
     pronouns_found = []

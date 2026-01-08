@@ -7,28 +7,23 @@ summary = pd.read_csv("figures/summary.csv", sep = ",", comment = "#")
 df["is_female"] = df["gender"].apply(lambda x: 1 if x == "female" else 0) # Create a binary column for female
 table = pd.crosstab(df["profession"], df["gender"])
 print(table)
+# Bias without noise
+total_doc = table.loc["doctor", "female"] + table.loc["doctor", "male"]
+total_nurse = table.loc["nurse", 'female'] + table.loc["nurse", 'male']
+prop_doc = round((table.loc["doctor", "female"] / total_doc), 2)
+prop_nurse = round((table.loc["nurse", "female"] / total_nurse), 2)
 
-# Bias
-prop_doc = round((table.loc["doctor", "female"] / 10000), 2) * 100
-prop_nurse = round((table.loc["nurse", "female"] / 10000), 2) * 100
-
-b = 50.0 # baseline at 50%
+b = 0.5 # baseline at 50%
 bias_doc = round((prop_doc - b), 2)
 bias_nurse = round((prop_nurse - b), 2)
+
+print(f'baseline 50%: {b} bias_doc: {bias_doc} bias nurse: {bias_nurse}, prop_doc: {prop_doc}, prop_nurse: {prop_nurse}')
 
 latex_bias = pd.DataFrame({
     "Professions":  ["Nurse", "Doctor"],
     "Gender Bias": [bias_nurse, bias_doc],
     "Probabilities": [prop_nurse, prop_doc],
 })
-
-# Generate LaTeX code
-latex_table_bias = latex_bias.to_latex(
-    index=False,
-    caption="Gender Bias",
-    label="tab:gender_stats_bias",
-    float_format="%.2f"
-)
 
 # Odds Ratio Calculation
 # Odds of being female
@@ -56,7 +51,7 @@ latex_odds = pd.DataFrame({
     "Female": [table.loc["nurse", "female"], table.loc["doctor", "female"]],
     "Male": [table.loc["nurse", "male"], table.loc["doctor", "male"]],
     "Odds of Female": [odds_nurse, odds_doctor],
-    "Chi-Square and p": [chi2, p],
+    "Chi-Square": [chi2, chi2],
     "Odds Ratio": [odds_ratio, odds_ratio],
 })
 
@@ -67,3 +62,4 @@ latex_table_odds = latex_odds.to_latex(
     label="tab:gender_stats",
     float_format="%.2f"
 )
+print(latex_table_odds)

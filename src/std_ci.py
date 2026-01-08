@@ -75,7 +75,7 @@ summary['CI Male'] = (
 
 latex_std_ci = summary[['profession', 'Female (%)', 'CI Female', 'Male (%)', 'CI Male']]
 
-latex_std_ci = latex_std_ci.to_latex(
+latex_table = latex_std_ci.to_latex(
     index=False,
     caption="Female pronoun proportions with 95\\% confidence intervals",
     label="tab:gender_bias",

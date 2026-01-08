@@ -34,7 +34,7 @@ This project is organized following the [Cookiecutter Data Science](https://cook
 
 ## Installation
 
-1. Setup environment:
+1. Setup environment
 ```bash
 pip install -r requirements.txt
 ``` 
@@ -47,7 +47,7 @@ pip install llama-cpp-python
 ```bash
 MODELPATH="/path/to/your/model.gguf"
 ```
-4. Run results:
+4. Run results in
 ```bash
-python notebooks/results.ipynb
+notebooks/results.ipynb
 ```

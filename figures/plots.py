@@ -49,6 +49,7 @@ plt.savefig('figures/proportion_by_profession_ci.png',
             metadata={"Seed": metadata_str['seed'], "Date": metadata_str['date'],
                       "GitCommit": metadata_str['git_commit']}, dpi=300)
 
+
 ## Stacked Bar Plot Gender Proportion by Profession
 
 plt.figure(figsize=(10, 6))

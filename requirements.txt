@@ -4,3 +4,4 @@ matplotlib~=3.9.0
 scipy~=1.14.0
 python-dotenv~=1.1.1
 tqdm~=4.67.1
+seaborn~=0.13.2

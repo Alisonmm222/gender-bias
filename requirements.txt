@@ -5,3 +5,6 @@ scipy~=1.14.0
 python-dotenv~=1.1.1
 tqdm~=4.67.1
 seaborn~=0.13.2
+dotenv~=0.9.9
+ipython~=8.26.0
+pytest~=9.0.2

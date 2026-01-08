@@ -21,7 +21,6 @@ summary = (
         male_n=("is_male", "sum"),
         female_prop=("is_female", "mean"),
         male_prop = ("is_male", "mean"),
-
     )
     .reset_index()
 )

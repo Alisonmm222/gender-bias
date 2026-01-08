@@ -46,7 +46,7 @@ plt.figtext(
 plt.savefig('figures/proportion_by_profession_ci.png',
             metadata={"Seed": metadata_str['seed'], "Date": metadata_str['date'],
                       "GitCommit": metadata_str['git_commit']}, dpi=300)
-plt.show()
+
 
 ## Stacked Bar Plot Gender Proportion by Profession
 
@@ -109,11 +109,10 @@ plt.title('Gender Proportions by Profession', fontsize=18)
 plt.ylim(0, 1)
 ax.yaxis.set_major_formatter(lambda y, _: f"{int(y*100)}%")
 plt.legend(ordered_handles, order)
-plt.savefig('figures/proportion_by_profession_bar.png',
-                metadata={"Seed": metadata_str['seed'], "Date": metadata_str['date'],
-                          "GitCommit": metadata_str['git_commit']}, dpi=300)
 plt.figtext(
     0.01, 0.01,
     f"Seed={metadata_str['seed']} | {metadata_str['date']} | commit={metadata_str['git_commit']}",
     fontsize=7, ha='left', va='bottom', alpha=0.6)
-plt.show()
+plt.savefig('figures/proportion_by_profession_bar.png',
+                metadata={"Seed": metadata_str['seed'], "Date": metadata_str['date'],
+                          "GitCommit": metadata_str['git_commit']}, dpi=300)

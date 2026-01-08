@@ -43,10 +43,11 @@ plt.figtext(
     0.01, 0.01,
     f"Seed={metadata_str['seed']} | {metadata_str['date']} | commit={metadata_str['git_commit']}",
     fontsize=7, ha='left', va='bottom', alpha=0.6)
+plt.figtext(0.75, 0.01, "The remaining percentages result from outputs classified as unknown.",
+            ha="center", fontsize=10)
 plt.savefig('figures/proportion_by_profession_ci.png',
             metadata={"Seed": metadata_str['seed'], "Date": metadata_str['date'],
                       "GitCommit": metadata_str['git_commit']}, dpi=300)
-
 
 ## Stacked Bar Plot Gender Proportion by Profession
 
